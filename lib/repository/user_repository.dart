@@ -1,0 +1,100 @@
+// ignore_for_file: constant_identifier_names
+
+import 'dart:io';
+
+import 'package:chatapp/locator.dart';
+import 'package:chatapp/models/user_model.dart';
+import 'package:chatapp/services/base_services/auth_base.dart';
+import 'package:chatapp/services/firebase_auth_services.dart';
+import 'package:chatapp/services/firebase_storage_services.dart';
+import 'package:chatapp/services/firestore_db_services.dart';
+
+enum AppMode { DEBUG, RELEASE }
+
+class UserRepository implements AuthBase {
+  final AppMode _appMode = AppMode.RELEASE;
+  final FirebaseAuthServices _firebaseAuthServices =
+      locator<FirebaseAuthServices>();
+  final FirestoreDbServices db = locator<FirestoreDbServices>();
+  final FirebaseStorageServices storage = locator<FirebaseStorageServices>();
+
+  @override
+  Future<UserModel?> currentUser() async {
+    if (_appMode == AppMode.RELEASE) {
+      UserModel? user = await _firebaseAuthServices.currentUser();
+      return await db.readUser(user!.userId);
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<UserModel?> signInAnonymously() async {
+    return _appMode == AppMode.RELEASE
+        ? await _firebaseAuthServices.signInAnonymously()
+        : null;
+  }
+
+  @override
+  Future<bool> signOut() async {
+    return _appMode == AppMode.RELEASE
+        ? await _firebaseAuthServices.signOut()
+        : false;
+  }
+
+  @override
+  Future<UserModel?> signInWithGoogle() async {
+    if (_appMode == AppMode.RELEASE) {
+      final UserModel? user = await _firebaseAuthServices.signInWithGoogle();
+      await db.saveUser(user!);
+      return user;
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<UserModel?> signInWithEmail(String email, String password) async {
+    if (_appMode == AppMode.RELEASE) {
+      UserModel? user =
+          await _firebaseAuthServices.signInWithEmail(email, password);
+      return await db.readUser(user!.userId);
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<UserModel?> signUpWithEmail(
+      String email, String password, String? userName) async {
+    if (_appMode == AppMode.RELEASE) {
+      final UserModel? user = await _firebaseAuthServices.signUpWithEmail(
+          email, password, userName);
+      await db.saveUser(user!);
+      return await db.readUser(user.userId);
+    } else {
+      return null;
+    }
+  }
+
+  Future<bool> updateUserName(String newUserName, String userId) async {
+    if (_appMode == AppMode.RELEASE) {
+      await db.updateUser(newUserName, userId);
+      return true;
+    }
+    return false;
+  }
+
+  Future<String> updateProfilePhoto(
+    String userId,
+    String fileType,
+    File file,
+  ) async {
+    if (_appMode == AppMode.RELEASE) {
+      String fileUrl = await storage.upload(userId, fileType, file);
+      await db.updateProfilePhoto(userId, fileUrl);
+      return fileUrl;
+    }
+    return "";
+  }
+}
