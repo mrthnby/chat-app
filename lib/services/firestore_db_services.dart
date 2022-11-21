@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:chatapp/models/user_model.dart';
 import 'package:chatapp/services/base_services/db_base.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -43,5 +41,19 @@ class FirestoreDbServices implements DBbase {
   Future<bool> updateProfilePhoto(String userId, String file) async {
     await db.collection("users").doc(userId).update({"profilePic": file});
     return true;
+  }
+
+  @override
+  Future<List<UserModel>> getAllUsers() async {
+    List<UserModel> allUsers = [];
+    QuerySnapshot<Map<String, dynamic>> docs =
+        await db.collection("users").get();
+
+    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in docs.docs) {
+      UserModel user = UserModel.fromMap(doc.data());
+      allUsers.add(user);
+    }
+
+    return allUsers;
   }
 }

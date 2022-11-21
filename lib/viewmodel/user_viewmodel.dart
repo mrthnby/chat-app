@@ -147,7 +147,12 @@ class UserViewModel with ChangeNotifier implements AuthBase {
     _userRepository.updateUserName(newUserName, userId);
   }
 
-  Future<String> updateProfilePhoto(String userId,String fileType,File file) async{
-    return await _userRepository.updateProfilePhoto(userId, fileType,file);
+  Future<String> updateProfilePhoto(
+      String userId, String fileType, File file) async {
+    return await _userRepository.updateProfilePhoto(userId, fileType, file);
+  }
+
+  Future<List<UserModel>> getAllUsers() async {
+    return await _userRepository.getAllUsers();
   }
 }

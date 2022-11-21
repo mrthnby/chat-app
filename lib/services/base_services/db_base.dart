@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:chatapp/models/user_model.dart';
 
 abstract class DBbase {
@@ -7,4 +5,5 @@ abstract class DBbase {
   Future<UserModel> readUser(String userId);
   Future<bool> updateUser(String newUserName, String userId);
   Future<bool> updateProfilePhoto(String userId, String file);
+  Future<List<UserModel>> getAllUsers();
 }
