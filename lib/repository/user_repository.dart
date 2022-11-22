@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:chatapp/locator.dart';
+import 'package:chatapp/models/message_model.dart';
 import 'package:chatapp/models/user_model.dart';
 import 'package:chatapp/services/base_services/auth_base.dart';
 import 'package:chatapp/services/firebase_auth_services.dart';
@@ -103,5 +104,18 @@ class UserRepository implements AuthBase {
       return await db.getAllUsers();
     }
     return [];
+  }
+
+  Stream<List<MessageModel>> getMessages({
+    required String currentUser,
+    required String interlocutor,
+  }) {
+    if (_appMode == AppMode.RELEASE) {
+      return db.getMessages(
+        currentUser,
+        interlocutor,
+      );
+    }
+    return const Stream.empty();
   }
 }

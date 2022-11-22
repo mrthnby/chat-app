@@ -1,3 +1,4 @@
+import 'package:chatapp/models/message_model.dart';
 import 'package:chatapp/models/user_model.dart';
 import 'package:chatapp/services/base_services/db_base.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -58,13 +59,16 @@ class FirestoreDbServices implements DBbase {
   }
 
   @override
-  Stream listenMessages(String currentUser, String interlocutor) {
-   return db
+  Stream<List<MessageModel>> getMessages(
+      String currentUser, String interlocutor) {
+    var snapshot = db
         .collection("chat")
         .doc("$currentUser--$interlocutor")
         .collection("messages")
         .orderBy("date")
         .snapshots();
 
+    return snapshot.map((querysnap) => querysnap.docs
+        .map((document) => MessageModel.fromMap(document.data())).toList());
   }
 }

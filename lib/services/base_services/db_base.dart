@@ -1,3 +1,4 @@
+import 'package:chatapp/models/message_model.dart';
 import 'package:chatapp/models/user_model.dart';
 
 abstract class DBbase {
@@ -6,5 +7,5 @@ abstract class DBbase {
   Future<bool> updateUser(String newUserName, String userId);
   Future<bool> updateProfilePhoto(String userId, String file);
   Future<List<UserModel>> getAllUsers();
-  Stream listenMessages(String currentUser, String interlocutor);
+  Stream<List<MessageModel>> getMessages(String currentUser, String interlocutor);
 }

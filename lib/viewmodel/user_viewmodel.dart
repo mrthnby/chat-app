@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:chatapp/locator.dart';
+import 'package:chatapp/models/message_model.dart';
 import 'package:chatapp/models/user_model.dart';
 import 'package:chatapp/repository/user_repository.dart';
 import 'package:chatapp/services/base_services/auth_base.dart';
@@ -154,5 +155,15 @@ class UserViewModel with ChangeNotifier implements AuthBase {
 
   Future<List<UserModel>> getAllUsers() async {
     return await _userRepository.getAllUsers();
+  }
+
+  Stream<List<MessageModel>> getMessages({
+    required String currentUser,
+    required String interlocutor,
+  }) {
+    return _userRepository.getMessages(
+      currentUser: currentUser,
+      interlocutor: interlocutor,
+    );
   }
 }
