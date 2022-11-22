@@ -170,7 +170,7 @@ packages:
     source: hosted
     version: "2.0.1"
   firebase_storage:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: firebase_storage
       sha256: a0c0bae9282ebd60369ef9d5632ac8233a7585b5fe90ae7c0667957ddfd3e3a6
@@ -297,7 +297,7 @@ packages:
     source: hosted
     version: "4.0.2"
   image_picker:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: image_picker
       sha256: a8f2f0aed50c03230ab37e93ca2905c50b6c4097245345956eb24a88f45328cd

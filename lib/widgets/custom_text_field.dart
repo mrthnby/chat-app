@@ -7,15 +7,21 @@ class CustomTextField extends StatelessWidget {
   final bool obSecure;
   final String initialValue;
   final bool readOnly;
+  final int radius;
+  final bool noPadding;
+  final Color? backgroundColor;
   final TextEditingController? textEditingController;
   final void Function(String? value)? onSaved;
   final void Function(String? value)? onChanged;
   const CustomTextField({
     Key? key,
     this.textEditingController,
+    this.radius = 9,
+    this.backgroundColor,
     this.readOnly = false,
+    this.noPadding = false,
     required this.hintText,
-    required this.keyboardType,
+    this.keyboardType = TextInputType.text,
     this.obSecure = false,
     this.onSaved,
     this.onChanged,
@@ -25,11 +31,11 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
+      padding: EdgeInsets.symmetric(horizontal: noPadding ? 0 : 32),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(.6),
-          borderRadius: BorderRadius.circular(9),
+          color: backgroundColor ?? Colors.black.withOpacity(.6),
+          borderRadius: BorderRadius.circular(radius.toDouble()),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

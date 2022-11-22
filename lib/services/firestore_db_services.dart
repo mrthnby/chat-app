@@ -56,4 +56,15 @@ class FirestoreDbServices implements DBbase {
 
     return allUsers;
   }
+
+  @override
+  Stream listenMessages(String currentUser, String interlocutor) {
+   return db
+        .collection("chat")
+        .doc("$currentUser--$interlocutor")
+        .collection("messages")
+        .orderBy("date")
+        .snapshots();
+
+  }
 }

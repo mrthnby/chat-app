@@ -1,4 +1,5 @@
 import 'package:chatapp/models/user_model.dart';
+import 'package:chatapp/pages/chat_page.dart';
 import 'package:chatapp/viewmodel/user_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,24 +9,62 @@ class UsersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserViewModel _userViewModel = Provider.of<UserViewModel>(context);
+    UserViewModel userViewModel = Provider.of<UserViewModel>(context);
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 2,
+          title: const Text(
+            "Users",
+            style: TextStyle(color: Colors.purple),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+        ),
         body: FutureBuilder<List<UserModel>>(
-          future: _userViewModel.getAllUsers(),
+          future: userViewModel.getAllUsers(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.length - 1 > 0) {
                 return ListView.builder(
+                  physics: const BouncingScrollPhysics(),
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
                     UserModel currentUser = snapshot.data![index];
-                    return ListTile(
-                      title: Text(currentUser.userName!),
-                      leading: CircleAvatar(
-                          backgroundImage: currentUser.profilePic! != ""
-                              ? NetworkImage(currentUser.profilePic!)
-                              : Image.asset("assets/profile_pic.jpg").image),
+                    if (currentUser.userId == userViewModel.user!.userId) {
+                      return Container();
+                    }
+                    return GestureDetector(
+                      onTap: () => Navigator.of(context, rootNavigator: true)
+                          .push(MaterialPageRoute(
+                        builder: (context) => ChatPage(
+                          user: userViewModel.user!,
+                          interlocutor: currentUser,
+                        ),
+                      )),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: .3,
+                        ),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 1,
+                          color: Colors.purple.withOpacity(.05),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            title: Text(currentUser.userName!),
+                            leading: CircleAvatar(
+                                backgroundImage: currentUser.profilePic! != ""
+                                    ? NetworkImage(currentUser.profilePic!)
+                                    : Image.asset("assets/profile_pic.jpg")
+                                        .image),
+                          ),
+                        ),
+                      ),
                     );
                   },
                 );
@@ -36,7 +75,7 @@ class UsersPage extends StatelessWidget {
               }
             } else {
               return const Center(
-                child: Text("An error occurred while retrieving user data"),
+                child: CircularProgressIndicator(),
               );
             }
           },
