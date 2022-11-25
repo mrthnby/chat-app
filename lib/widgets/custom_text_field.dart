@@ -5,17 +5,16 @@ class CustomTextField extends StatelessWidget {
   final String hintText;
   final TextInputType? keyboardType;
   final bool obSecure;
-  final String initialValue;
   final bool readOnly;
   final int radius;
   final bool noPadding;
   final Color? backgroundColor;
-  final TextEditingController? textEditingController;
+  final TextEditingController textEditingController;
   final void Function(String? value)? onSaved;
   final void Function(String? value)? onChanged;
   const CustomTextField({
     Key? key,
-    this.textEditingController,
+    required this.textEditingController,
     this.radius = 9,
     this.backgroundColor,
     this.readOnly = false,
@@ -25,7 +24,6 @@ class CustomTextField extends StatelessWidget {
     this.obSecure = false,
     this.onSaved,
     this.onChanged,
-    this.initialValue = "",
   }) : super(key: key);
 
   @override
@@ -40,9 +38,9 @@ class CustomTextField extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           child: TextFormField(
+            controller: textEditingController,
             onChanged: onChanged,
             readOnly: readOnly,
-            initialValue: initialValue,
             onSaved: onSaved,
             obscureText: obSecure,
             style: GoogleFonts.comfortaa(

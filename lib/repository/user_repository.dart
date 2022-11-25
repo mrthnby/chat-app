@@ -118,4 +118,10 @@ class UserRepository implements AuthBase {
     }
     return const Stream.empty();
   }
+
+  Future<void> saveMessage(MessageModel message) async {
+    if (_appMode == AppMode.RELEASE) {
+      await db.saveMessage(message);
+    }
+  }
 }

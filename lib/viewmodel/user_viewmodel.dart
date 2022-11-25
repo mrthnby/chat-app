@@ -166,4 +166,8 @@ class UserViewModel with ChangeNotifier implements AuthBase {
       interlocutor: interlocutor,
     );
   }
+
+  Future<void> saveMessage(MessageModel message) async {
+    await _userRepository.saveMessage(message);
+  }
 }

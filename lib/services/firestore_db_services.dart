@@ -65,10 +65,34 @@ class FirestoreDbServices implements DBbase {
         .collection("chat")
         .doc("$currentUser--$interlocutor")
         .collection("messages")
-        .orderBy("date")
+        .orderBy("date", descending: true)
         .snapshots();
 
     return snapshot.map((querysnap) => querysnap.docs
-        .map((document) => MessageModel.fromMap(document.data())).toList());
+        .map((document) => MessageModel.fromMap(document.data()))
+        .toList());
+  }
+
+  @override
+  Future<void> saveMessage(MessageModel message) async {
+    String docID = db.collection("chat").doc().id;
+    String userDocID = "${message.from}--${message.to}";
+    String interlocutorDocID = "${message.to}--${message.from}";
+    Map<String, dynamic> messageData = message.toMap();
+    Map<String, dynamic> counterMessageData = message.toMap();
+    counterMessageData.update("isFromMe", (value) => false);
+    await db
+        .collection("chat")
+        .doc(userDocID)
+        .collection("messages")
+        .doc(docID)
+        .set(messageData);
+
+    await db
+        .collection("chat")
+        .doc(interlocutorDocID)
+        .collection("messages")
+        .doc(docID)
+        .set(counterMessageData);
   }
 }

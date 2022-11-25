@@ -95,9 +95,9 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 20,
             ),
             CustomTextField(
+              textEditingController: TextEditingController(),
               readOnly: true,
               hintText: "Email",
-              initialValue: user.email!,
               keyboardType: TextInputType.text,
               onSaved: (String? value) {},
             ),
@@ -106,12 +106,11 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             CustomTextField(
               textEditingController: _textEditingController,
-              initialValue: user.userName!,
-              hintText: "Username",
               keyboardType: TextInputType.text,
               onChanged: ((value) {
                 _textEditingController.text = value!;
               }),
+              hintText: '',
             ),
             const SizedBox(
               height: 20,

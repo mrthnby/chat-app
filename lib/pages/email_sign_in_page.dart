@@ -49,9 +49,9 @@ class _EmailSignInPageState extends State<EmailSignInPage> {
                                   height: 24,
                                 ),
                                 CustomTextField(
-                                  initialValue: "meralihanbay@gmail.com",
                                   hintText: "E-Mail",
                                   keyboardType: TextInputType.emailAddress,
+                                  textEditingController: TextEditingController(),
                                   onSaved: (value) {
                                     _email = value!;
                                   },
@@ -60,7 +60,7 @@ class _EmailSignInPageState extends State<EmailSignInPage> {
                                   height: 8,
                                 ),
                                 CustomTextField(
-                                  initialValue: "123456789",
+                                  textEditingController: TextEditingController(),
                                   hintText: "Password",
                                   obSecure: true,
                                   keyboardType: TextInputType.visiblePassword,

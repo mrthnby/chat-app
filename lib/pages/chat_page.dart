@@ -1,7 +1,9 @@
+import 'package:chatapp/locator.dart';
 import 'package:chatapp/models/message_model.dart';
 import 'package:chatapp/models/user_model.dart';
 import 'package:chatapp/viewmodel/user_viewmodel.dart';
 import 'package:chatapp/widgets/custom_text_field.dart';
+import 'package:chatapp/widgets/message_box.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +21,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     TextEditingController textEditingController = TextEditingController();
+    ScrollController _scrollController = ScrollController();
     UserViewModel userViewModel = Provider.of<UserViewModel>(context);
     UserModel user = widget.user;
     UserModel interlocutor = widget.interlocutor;
@@ -59,11 +62,15 @@ class _ChatPageState extends State<ChatPage> {
                       );
                     }
                     return ListView.builder(
+                      controller: _scrollController,
+                      reverse: true,
                       physics: const BouncingScrollPhysics(),
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         MessageModel currentmessage = snapshot.data![index];
-                        return Text(currentmessage.content);
+                        return MessageBox(
+                          message: currentmessage,
+                        );
                       },
                     );
                   },
@@ -84,7 +91,24 @@ class _ChatPageState extends State<ChatPage> {
                     Container(
                       margin: const EdgeInsets.all(8),
                       child: FloatingActionButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          if (textEditingController.text.trim().isNotEmpty) {
+                            await userViewModel.saveMessage(
+                              MessageModel(
+                                from: user.userId,
+                                to: interlocutor.userId,
+                                content: textEditingController.text,
+                                isFromMe: true,
+                              ),
+                            );
+                            textEditingController.clear();
+                            _scrollController.animateTo(
+                              0,
+                              duration: const Duration(milliseconds: 10),
+                              curve: Curves.bounceIn,
+                            );
+                          }
+                        },
                         elevation: 0,
                         child: const Icon(
                           Icons.send_rounded,

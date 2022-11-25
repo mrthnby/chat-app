@@ -5,14 +5,14 @@ class MessageModel {
   final String to;
   final String content;
   final bool isFromMe;
-  final DateTime date;
+  final Timestamp? date;
 
   MessageModel({
     required this.from,
     required this.to,
     required this.content,
     required this.isFromMe,
-    required this.date,
+    this.date,
   });
 
   MessageModel.fromMap(Map<String, dynamic> data)
@@ -21,16 +21,16 @@ class MessageModel {
           to: data["to"],
           content: data["content"],
           isFromMe: data["isFromMe"],
-          date: (data["date"] as Timestamp).toDate(),
+          date: data["date"],
         );
 
-  Map<String, dynamic> toMap(MessageModel message) {
+  Map<String, dynamic> toMap() {
     return {
       "from": from,
       "to": to,
       "content": content,
       "isFromMe": isFromMe,
-      "date": date,
+      "date": date ?? FieldValue.serverTimestamp(),
     };
   }
 }

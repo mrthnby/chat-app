@@ -42,8 +42,9 @@ class EmailSignUpPage extends StatelessWidget {
                                   height: 24,
                                 ),
                                 CustomTextField(
+                                  textEditingController:
+                                      TextEditingController(),
                                   hintText: "Name",
-                                  initialValue: "mert",
                                   keyboardType: TextInputType.emailAddress,
                                   onSaved: (value) {
                                     _userName = value!;
@@ -53,8 +54,9 @@ class EmailSignUpPage extends StatelessWidget {
                                   height: 8,
                                 ),
                                 CustomTextField(
+                                  textEditingController:
+                                      TextEditingController(),
                                   hintText: "E-Mail",
-                                  initialValue: "meralihanbay@gmail.com",
                                   keyboardType: TextInputType.emailAddress,
                                   onSaved: (value) {
                                     _email = value!;
@@ -64,7 +66,8 @@ class EmailSignUpPage extends StatelessWidget {
                                   height: 8,
                                 ),
                                 CustomTextField(
-                                  initialValue: "123456789",
+                                  textEditingController:
+                                      TextEditingController(),
                                   hintText: "Password",
                                   obSecure: true,
                                   keyboardType: TextInputType.visiblePassword,
