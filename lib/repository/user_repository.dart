@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:chatapp/locator.dart';
+import 'package:chatapp/models/chat_model.dart';
 import 'package:chatapp/models/message_model.dart';
 import 'package:chatapp/models/user_model.dart';
 import 'package:chatapp/services/base_services/auth_base.dart';
@@ -123,5 +124,9 @@ class UserRepository implements AuthBase {
     if (_appMode == AppMode.RELEASE) {
       await db.saveMessage(message);
     }
+  }
+
+  Future<List<ChatModel>> getConversations(String userId) async {
+    return await db.getConversations(userId);
   }
 }

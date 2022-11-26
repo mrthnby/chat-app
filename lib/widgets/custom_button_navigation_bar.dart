@@ -18,6 +18,7 @@ class CustomNavigation extends StatelessWidget {
       tabBar: CupertinoTabBar(
         items: [
           _generateBarItem(TabItem.profile),
+          _generateBarItem(TabItem.chats),
           _generateBarItem(TabItem.users),
         ],
         onTap: (index) => onTabSelect(

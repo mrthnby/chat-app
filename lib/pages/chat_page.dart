@@ -1,10 +1,8 @@
-import 'package:chatapp/locator.dart';
 import 'package:chatapp/models/message_model.dart';
 import 'package:chatapp/models/user_model.dart';
 import 'package:chatapp/viewmodel/user_viewmodel.dart';
 import 'package:chatapp/widgets/custom_text_field.dart';
 import 'package:chatapp/widgets/message_box.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +19,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     TextEditingController textEditingController = TextEditingController();
-    ScrollController _scrollController = ScrollController();
+    ScrollController scrollController = ScrollController();
     UserViewModel userViewModel = Provider.of<UserViewModel>(context);
     UserModel user = widget.user;
     UserModel interlocutor = widget.interlocutor;
@@ -62,7 +60,7 @@ class _ChatPageState extends State<ChatPage> {
                       );
                     }
                     return ListView.builder(
-                      controller: _scrollController,
+                      controller: scrollController,
                       reverse: true,
                       physics: const BouncingScrollPhysics(),
                       itemCount: snapshot.data!.length,
@@ -102,7 +100,7 @@ class _ChatPageState extends State<ChatPage> {
                               ),
                             );
                             textEditingController.clear();
-                            _scrollController.animateTo(
+                            scrollController.animateTo(
                               0,
                               duration: const Duration(milliseconds: 10),
                               curve: Curves.bounceIn,

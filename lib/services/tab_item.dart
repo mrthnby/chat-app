@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum TabItem { profile, users }
+enum TabItem { profile, chats, users }
 
 class TabItemData {
   final String title;
@@ -13,9 +13,14 @@ class TabItemData {
       "Users",
       const Icon(Icons.people_rounded),
     ),
+    TabItem.chats: TabItemData(
+      "Chats",
+      const Icon(Icons.chat_bubble_rounded),
+    ),
     TabItem.profile: TabItemData(
       "Profile",
       const Icon(Icons.account_circle_rounded),
-    )
+    ),
+    
   };
 }

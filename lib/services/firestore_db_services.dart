@@ -1,3 +1,4 @@
+import 'package:chatapp/models/chat_model.dart';
 import 'package:chatapp/models/message_model.dart';
 import 'package:chatapp/models/user_model.dart';
 import 'package:chatapp/services/base_services/db_base.dart';
@@ -88,11 +89,42 @@ class FirestoreDbServices implements DBbase {
         .doc(docID)
         .set(messageData);
 
+    await db.collection("chat").doc(userDocID).set({
+      "owner": message.from,
+      "interlocutor": message.to,
+      "generateDate": FieldValue.serverTimestamp(),
+      "lastMessage": message.content,
+      "seen": false,
+    });
+
     await db
         .collection("chat")
         .doc(interlocutorDocID)
         .collection("messages")
         .doc(docID)
         .set(counterMessageData);
+
+    await db.collection("chat").doc(interlocutorDocID).set({
+      "owner": message.to,
+      "interlocutor": message.from,
+      "generateDate": FieldValue.serverTimestamp(),
+      "lastMessage": message.content,
+      "seen": false,
+    });
+  }
+
+  @override
+  Future<List<ChatModel>> getConversations(String userId) async {
+    List<ChatModel> conversations = [];
+    QuerySnapshot<Map<String, dynamic>> query = await db
+        .collection("chat")
+        .where("owner", isEqualTo: userId)
+        .orderBy("generateDate", descending: true)
+        .get();
+
+    for (DocumentSnapshot<Map<String, dynamic>> snap in query.docs) {
+      conversations.add(ChatModel.fromMap(snap.data()!));
+    }
+    return conversations;
   }
 }

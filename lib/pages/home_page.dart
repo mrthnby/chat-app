@@ -1,3 +1,4 @@
+import 'package:chatapp/pages/current_chats_page.dart';
 import 'package:chatapp/pages/profile_page.dart';
 import 'package:chatapp/pages/users_page.dart';
 import 'package:chatapp/services/tab_item.dart';
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   Map<TabItem, Widget> allPages() {
     return {
       TabItem.profile: const ProfilePage(),
+      TabItem.chats: const ChatsScreen(),
       TabItem.users: const UsersPage(),
     };
   }

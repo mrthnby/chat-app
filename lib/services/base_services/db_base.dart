@@ -1,3 +1,4 @@
+import 'package:chatapp/models/chat_model.dart';
 import 'package:chatapp/models/message_model.dart';
 import 'package:chatapp/models/user_model.dart';
 
@@ -10,4 +11,5 @@ abstract class DBbase {
   Stream<List<MessageModel>> getMessages(
       String currentUser, String interlocutor);
   Future<void> saveMessage(MessageModel message);
+  Future<List<ChatModel>> getConversations(String userId);
 }

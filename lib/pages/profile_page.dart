@@ -16,6 +16,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late TextEditingController _textEditingController;
+  late TextEditingController _emailTextEditingController;
   File? _choosenPhoto;
   final ImagePicker _imagePicker = ImagePicker();
   @override
@@ -23,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
     UserViewModel userViewModel = Provider.of<UserViewModel>(context);
     UserModel user = userViewModel.user!;
     _textEditingController = TextEditingController(text: user.userName!);
+    _emailTextEditingController = TextEditingController(text: user.email);
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -95,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 20,
             ),
             CustomTextField(
-              textEditingController: TextEditingController(),
+              textEditingController: _emailTextEditingController,
               readOnly: true,
               hintText: "Email",
               keyboardType: TextInputType.text,
