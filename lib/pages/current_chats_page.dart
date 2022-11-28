@@ -30,29 +30,34 @@ class _ChatsScreenState extends State<ChatsScreen> {
         future: userViewModel.getConversations(userViewModel.user!.userId),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                setState(() {});
-                await Future.delayed(
-                  const Duration(
-                    seconds: 1,
-                  ),
-                );
-              },
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 3),
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: const Center(
-                  child: Text(
-                    "There is no messages to see, go to users page and start to chat with someone",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           } else {
             List<ChatModel> conversations = snapshot.data!;
+            if (conversations.length == 0) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  setState(() {});
+                  await Future.delayed(
+                    const Duration(
+                      seconds: 1,
+                    ),
+                  );
+                },
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height / 3),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: const Center(
+                    child: Text(
+                      "There is no messages to see, go to users page and start conversation with someone",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              );
+            }
             return RefreshIndicator(
               onRefresh: () async {
                 setState(() {});
@@ -84,8 +89,9 @@ class _ChatsScreenState extends State<ChatsScreen> {
                     child: ListTile(
                       leading: CircleAvatar(
                         radius: 30,
-                        backgroundImage:
-                            NetworkImage(currentSpoken.profilePic!),
+                        backgroundImage: currentSpoken.profilePic != ""
+                            ? NetworkImage(currentSpoken.profilePic!)
+                            : Image.asset("assets/profile_pic.jpg").image,
                       ),
                       title: Text(currentSpoken.userName!),
                       subtitle: Row(

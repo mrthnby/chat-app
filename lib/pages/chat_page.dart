@@ -35,9 +35,9 @@ class _ChatPageState extends State<ChatPage> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage(
-                        widget.interlocutor.profilePic!,
-                      ),
+                      backgroundImage: widget.interlocutor.profilePic! != ""
+                          ? NetworkImage(widget.interlocutor.profilePic!)
+                          : Image.asset("assets/profile_pic.jpg").image,
                     ),
                     Text(
                       widget.interlocutor.userName!,
