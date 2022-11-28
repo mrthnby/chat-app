@@ -6,7 +6,8 @@ class ChatModel {
   final String lastMessage;
   final bool seen;
   final Timestamp? generateDate;
-  final Timestamp? seenDate;
+  Timestamp? seenDate;
+  String timeDiff = "";
 
   ChatModel({
     required this.owner,

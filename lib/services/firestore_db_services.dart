@@ -4,6 +4,7 @@ import 'package:chatapp/models/user_model.dart';
 import 'package:chatapp/services/base_services/db_base.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class FirestoreDbServices implements DBbase {
   final FirebaseFirestore db = FirebaseFirestore.instance;
@@ -47,7 +48,7 @@ class FirestoreDbServices implements DBbase {
 
   @override
   Future<List<UserModel>> getAllUsers() async {
-  List<UserModel> allUsers = [];
+    List<UserModel> allUsers = [];
 
     QuerySnapshot<Map<String, dynamic>> docs =
         await db.collection("users").get();
@@ -117,6 +118,8 @@ class FirestoreDbServices implements DBbase {
   @override
   Future<List<ChatModel>> getConversations(String userId) async {
     List<ChatModel> conversations = [];
+    DateTime currentTime = await getCurrentTime(userId);
+
     QuerySnapshot<Map<String, dynamic>> query = await db
         .collection("chat")
         .where("owner", isEqualTo: userId)
@@ -124,10 +127,21 @@ class FirestoreDbServices implements DBbase {
         .get();
 
     for (DocumentSnapshot<Map<String, dynamic>> snap in query.docs) {
-      conversations.add(ChatModel.fromMap(snap.data()!));
+      ChatModel chat = ChatModel.fromMap(snap.data()!);
+      Duration diff = currentTime.difference(chat.generateDate!.toDate());
+      chat.timeDiff = timeago.format(currentTime.subtract(diff));
+      conversations.add(chat);
     }
     return conversations;
   }
 
-  
+  Future<DateTime> getCurrentTime(String userId) async {
+    await db.collection("server").doc(userId).set({
+      "time": FieldValue.serverTimestamp(),
+    });
+    DocumentSnapshot<Map<String, dynamic>> currentTimeStamp =
+        await db.collection("server").doc(userId).get();
+    Timestamp currentTime = currentTimeStamp.data()!["time"];
+    return currentTime.toDate();
+  }
 }

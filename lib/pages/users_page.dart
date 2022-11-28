@@ -26,22 +26,24 @@ class _UsersPageState extends State<UsersPage> {
           centerTitle: true,
           backgroundColor: Colors.white,
         ),
-        body: RefreshIndicator(
-          onRefresh: () async {
-            setState(() {});
-            await Future.delayed(
-              const Duration(
-                seconds: 1,
-              ),
-            );
-          },
-          child: FutureBuilder<List<UserModel>>(
-            future: userViewModel.getAllUsers(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data!.length - 1 > 0) {
-                  return ListView.builder(
-                    physics: const BouncingScrollPhysics(),
+        body: FutureBuilder<List<UserModel>>(
+          future: userViewModel.getAllUsers(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data!.length - 1 > 0) {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    setState(() {});
+                    await Future.delayed(
+                      const Duration(
+                        seconds: 1,
+                      ),
+                    );
+                  },
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
+                    ),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       UserModel currentUser = snapshot.data![index];
@@ -83,19 +85,19 @@ class _UsersPageState extends State<UsersPage> {
                         ),
                       );
                     },
-                  );
-                } else {
-                  return const Center(
-                    child: Text("There is no user logged into the system."),
-                  );
-                }
+                  ),
+                );
               } else {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: Text("There is no user logged into the system."),
                 );
               }
-            },
-          ),
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
       ),
     );

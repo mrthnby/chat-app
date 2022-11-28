@@ -30,8 +30,26 @@ class _ChatsScreenState extends State<ChatsScreen> {
         future: userViewModel.getConversations(userViewModel.user!.userId),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return RefreshIndicator(
+              onRefresh: () async {
+                setState(() {});
+                await Future.delayed(
+                  const Duration(
+                    seconds: 1,
+                  ),
+                );
+              },
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height / 3),
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: const Center(
+                  child: Text(
+                    "There is no messages to see, go to users page and start to chat with someone",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             );
           } else {
             List<ChatModel> conversations = snapshot.data!;
@@ -45,6 +63,9 @@ class _ChatsScreenState extends State<ChatsScreen> {
                 );
               },
               child: ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
+                ),
                 itemCount: conversations.length,
                 itemBuilder: (context, index) {
                   ChatModel currentChat = conversations[index];
@@ -67,7 +88,13 @@ class _ChatsScreenState extends State<ChatsScreen> {
                             NetworkImage(currentSpoken.profilePic!),
                       ),
                       title: Text(currentSpoken.userName!),
-                      subtitle: Text(currentChat.lastMessage),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(currentChat.lastMessage),
+                          Text(currentChat.timeDiff),
+                        ],
+                      ),
                     ),
                   );
                 },

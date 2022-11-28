@@ -91,15 +91,16 @@ class _ChatPageState extends State<ChatPage> {
                       child: FloatingActionButton(
                         onPressed: () async {
                           if (textEditingController.text.trim().isNotEmpty) {
+                            String currentMessage = textEditingController.text;
+                            textEditingController.clear();
                             await userViewModel.saveMessage(
                               MessageModel(
                                 from: user.userId,
                                 to: interlocutor.userId,
-                                content: textEditingController.text,
+                                content: currentMessage,
                                 isFromMe: true,
                               ),
                             );
-                            textEditingController.clear();
                             scrollController.animateTo(
                               0,
                               duration: const Duration(milliseconds: 10),

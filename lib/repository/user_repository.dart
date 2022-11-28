@@ -139,4 +139,8 @@ class UserRepository implements AuthBase {
     readUser(userId);
     return user;
   }
+
+  Future<DateTime> getCurrentTime(String userId) async {
+    return await db.getCurrentTime(userId);
+  }
 }

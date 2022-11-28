@@ -186,4 +186,8 @@ class UserViewModel with ChangeNotifier implements AuthBase {
     }
     return _userRepository.getUser(userId);
   }
+
+  Future<DateTime> getCurrentTime(String userId) async {
+    return _userRepository.getCurrentTime(userId);
+  }
 }
