@@ -1,11 +1,18 @@
 import 'package:chatapp/models/chat_model.dart';
+import 'package:chatapp/models/user_model.dart';
+import 'package:chatapp/pages/chat_page.dart';
 import 'package:chatapp/viewmodel/user_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ChatsScreen extends StatelessWidget {
+class ChatsScreen extends StatefulWidget {
   const ChatsScreen({super.key});
 
+  @override
+  State<ChatsScreen> createState() => _ChatsScreenState();
+}
+
+class _ChatsScreenState extends State<ChatsScreen> {
   @override
   Widget build(BuildContext context) {
     UserViewModel userViewModel = Provider.of<UserViewModel>(context);
@@ -28,12 +35,43 @@ class ChatsScreen extends StatelessWidget {
             );
           } else {
             List<ChatModel> conversations = snapshot.data!;
-            return ListView.builder(
-              itemCount: conversations.length,
-              itemBuilder: (context, index) {
-                ChatModel currentChat = conversations[index];
-                return Center(child: Text(currentChat.lastMessage));
+            return RefreshIndicator(
+              onRefresh: () async {
+                setState(() {});
+                await Future.delayed(
+                  const Duration(
+                    seconds: 1,
+                  ),
+                );
               },
+              child: ListView.builder(
+                itemCount: conversations.length,
+                itemBuilder: (context, index) {
+                  ChatModel currentChat = conversations[index];
+                  UserModel currentSpoken =
+                      userViewModel.getUserFromCache(currentChat.interlocutor);
+                  return GestureDetector(
+                    onTap: () =>
+                        Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(
+                          user: userViewModel.user!,
+                          interlocutor: currentSpoken,
+                        ),
+                      ),
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 30,
+                        backgroundImage:
+                            NetworkImage(currentSpoken.profilePic!),
+                      ),
+                      title: Text(currentSpoken.userName!),
+                      subtitle: Text(currentChat.lastMessage),
+                    ),
+                  );
+                },
+              ),
             );
           }
         },

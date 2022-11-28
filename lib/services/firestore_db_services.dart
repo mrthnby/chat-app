@@ -47,7 +47,8 @@ class FirestoreDbServices implements DBbase {
 
   @override
   Future<List<UserModel>> getAllUsers() async {
-    List<UserModel> allUsers = [];
+  List<UserModel> allUsers = [];
+
     QuerySnapshot<Map<String, dynamic>> docs =
         await db.collection("users").get();
 
@@ -127,4 +128,6 @@ class FirestoreDbServices implements DBbase {
     }
     return conversations;
   }
+
+  
 }

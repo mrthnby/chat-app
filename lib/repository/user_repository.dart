@@ -129,4 +129,14 @@ class UserRepository implements AuthBase {
   Future<List<ChatModel>> getConversations(String userId) async {
     return await db.getConversations(userId);
   }
+
+  late UserModel user;
+  Future<void> readUser(String userId) async {
+    user = await db.readUser(userId);
+  }
+
+  UserModel getUser(String userId) {
+    readUser(userId);
+    return user;
+  }
 }

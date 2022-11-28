@@ -18,6 +18,7 @@ class UserViewModel with ChangeNotifier implements AuthBase {
   UserModel? _user;
   String? emailErrorMessage;
   String? passwordErrorMessage;
+  List<UserModel> allUsers = [];
 
   UserViewModel() {
     currentUser();
@@ -155,7 +156,8 @@ class UserViewModel with ChangeNotifier implements AuthBase {
   }
 
   Future<List<UserModel>> getAllUsers() async {
-    return await _userRepository.getAllUsers();
+    allUsers = await _userRepository.getAllUsers();
+    return allUsers;
   }
 
   Stream<List<MessageModel>> getMessages({
@@ -174,5 +176,14 @@ class UserViewModel with ChangeNotifier implements AuthBase {
 
   Future<List<ChatModel>> getConversations(String userId) async {
     return await _userRepository.getConversations(userId);
+  }
+
+  UserModel getUserFromCache(String userId) {
+    for (UserModel user in allUsers) {
+      if (user.userId == userId) {
+        return user;
+      }
+    }
+    return _userRepository.getUser(userId);
   }
 }
